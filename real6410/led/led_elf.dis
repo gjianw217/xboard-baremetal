@@ -1,0 +1,47 @@
+
+led.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+0c000000 <_start>:
+ c000000:	e59f004c 	ldr	r0, [pc, #76]	; c000054 <delay_loop+0x10>
+ c000004:	e3a01601 	mov	r1, #1048576	; 0x100000
+ c000008:	e5801000 	str	r1, [r0]
+ c00000c:	e3a02a01 	mov	r2, #4096	; 0x1000
+
+0c000010 <led_blink>:
+ c000010:	e59f0040 	ldr	r0, [pc, #64]	; c000058 <delay_loop+0x14>
+ c000014:	e3a01a03 	mov	r1, #12288	; 0x3000
+ c000018:	e5801000 	str	r1, [r0]
+ c00001c:	eb000007 	bl	c000040 <delay>
+ c000020:	e59f0030 	ldr	r0, [pc, #48]	; c000058 <delay_loop+0x14>
+ c000024:	e3a01000 	mov	r1, #0
+ c000028:	e5801000 	str	r1, [r0]
+ c00002c:	eb000003 	bl	c000040 <delay>
+ c000030:	e2422001 	sub	r2, r2, #1
+ c000034:	e3520000 	cmp	r2, #0
+ c000038:	1afffff4 	bne	c000010 <led_blink>
+
+0c00003c <halt>:
+ c00003c:	eafffffe 	b	c00003c <halt>
+
+0c000040 <delay>:
+ c000040:	e3a00401 	mov	r0, #16777216	; 0x1000000
+
+0c000044 <delay_loop>:
+ c000044:	e2400001 	sub	r0, r0, #1
+ c000048:	e3500000 	cmp	r0, #0
+ c00004c:	1afffffc 	bne	c000044 <delay_loop>
+ c000050:	e1a0f00e 	mov	pc, lr
+ c000054:	7f008814 	svcvc	0x00008814
+ c000058:	7f008818 	svcvc	0x00008818
+ c00005c:	00001e41 	andeq	r1, r0, r1, asr #28
+ c000060:	61656100 	cmnvs	r5, r0, lsl #2
+ c000064:	01006962 	tsteq	r0, r2, ror #18
+ c000068:	00000014 	andeq	r0, r0, r4, lsl r0
+ c00006c:	412d3705 			; <UNDEFINED> instruction: 0x412d3705
+ c000070:	070a0600 	streq	r0, [sl, -r0, lsl #12]
+ c000074:	09010841 	stmdbeq	r1, {r0, r6, fp}
+ c000078:	Address 0x000000000c000078 is out of bounds.
+
