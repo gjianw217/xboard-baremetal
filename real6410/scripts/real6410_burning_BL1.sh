@@ -47,11 +47,19 @@ fi
 
 echo '-------------------------------------------'
 
-# 3. 计算SDHC的BL的起始位置 = 总字节数 - (1025 + 1 + 16)*512;
-echo "SDHC BL1 = (All_Bytes - (1025 + 1 + 16)*512)"
+# 3. 计算SDHC的BL的起始位置 = 总字节数 - ($Reserved_Bytes + 1 + 16)*512;
+TwoG_Bytes=2147483648 #2*1024*1024*1024
 ALL_Bytes=`echo $fdisk_string | cut -d ' ' -f 5`
 echo "All_Bytes:$ALL_Bytes"
-BL1_Start_Byte=`echo "($ALL_Bytes-(1025 + 1 + 16)*512)" | bc`
+
+if [ $ALL_Bytes -gt $TwoG_Bytes ];then
+Reserved_Bytes=1025
+else
+Reserved_Bytes=1
+fi
+echo "SDHC BL1 = (All_Bytes - ($Reserved_Bytes + 1 + 16)*512)"
+
+BL1_Start_Byte=`echo "($ALL_Bytes-($Reserved_Bytes + 1 + 16)*512)" | bc`
 echo "BL1 Start Bytes:$BL1_Start_Byte"
 echo '-------------------------------------------'
 
