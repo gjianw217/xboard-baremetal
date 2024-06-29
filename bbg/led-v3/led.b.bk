@@ -1,0 +1,85 @@
+/*************************************************************************
+    > File Name: led.c
+    > Description: 完善AM335X裸机LED
+    > Created Time: 20170726
+*************************************************************************/
+
+#include "AM335X_SOC.h"
+#include "delay.h"
+/********************
+MMC2_DAT7 	D40			mode7  gpio0_27  CONF_GPMC_AD11
+********************/
+
+void led_init(void)
+{
+	//1.使能GPIO外设时钟. CP468
+	CM_WKUP_GPIO0_CLKCTRL  = (0x40002);
+	//CM_PER_GPIO1_CLKCTRL   = (0x40002);
+	
+	
+	//CONF_GPMC_AD10 =  ((0x0 << 7 ) | (0X1 << 3 ) );
+	CONF_GPMC_AD11 =  ((0x7 << 0 ) | (0X1 << 4 ) | (0x1 << 5) );
+	
+#if 1
+
+	//3.设置为输出;CP3731
+	GPIO0_OE &= ~(0x01<<27);
+
+	//4.设置允许输出位;
+	GPIO0_SETDATAOUT |= (0x01<<27);
+	
+	
+	
+	delay(1000);
+	GPIO0_DATAOUT |= (0x01<<27);
+	delay(1000);
+	GPIO0_DATAOUT &= ~(0x01<<27 );
+	
+	//GPIO0_OE = (0xFEFFFFFF);//bit24=1
+	GPIO0_SETDATAOUT = (0xFFFFFFFF);
+    	GPIO0_OE &=~(1<<27);
+	
+	while(1)
+	{
+	//GPIO0_CLRDATAOUT = (0x01000000);
+	GPIO0_CLEARDATAOUT |= (1<<27);//GPIO0_27
+	delay(50000);
+		//while(1);
+		//GPIO0_SETDATAOUT = (0x01000000);
+	GPIO0_SETDATAOUT |= (1<<27);//GPIO0_27
+	delay(50000);		
+	}
+
+#endif	
+
+#if 0
+
+	//3.设置为输出;CP3731
+	GPIO1_OE &= ~(0x01<<27);
+
+	//4.设置允许输出位;
+	GPIO1_SETDATAOUT |= (0x01<<27);
+	
+	delay(1000);
+	GPIO1_DATAOUT |= (0x01<<27);
+	delay(1000);
+	GPIO1_DATAOUT &= ~(0x01<<27 );
+	
+	//GPIO1_OE = (0xFEFFFFFF);//bit24=1
+	GPIO1_SETDATAOUT = (0xFFFFFFFF);
+	 GPIO1_OE &=~(1<<27);
+	
+	while(1)
+	{
+		//
+		//GPIO1_CLRDATAOUT = (0x01000000);
+		GPIO1_CLEARDATAOUT = (1<<27);//GPIO1_27
+		delay(500000);
+		//while(1);
+		//GPIO1_SETDATAOUT = (0x01000000);
+		GPIO1_SETDATAOUT = (1<<27);//GPIO1_27
+		delay(500000);		
+	}
+
+#endif
+}
